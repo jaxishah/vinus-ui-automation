@@ -23,6 +23,10 @@
   "homepage": "https://github.com/jaxishah/vinus-ui-automation#readme",
   "devDependencies": {
     "@playwright/test": "^1.55.1",
-    "@types/node": "^24.6.2"
+    "@types/node": "^24.7.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
   }
 }
