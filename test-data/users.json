@@ -1,0 +1,30 @@
+{
+  "validUser": {
+    "username": "testuser123",
+    "password": "Test@1234",
+    "nickname": "tester",
+    "name": "Test User",
+    "birthday": "1990-01-01",
+    "phone": {
+      "hp1": "010",
+      "hp2": "1234",
+      "hp3": "5678"
+    },
+    "bank": "55",
+    "bank_owner": "Test User"
+  },
+  "invalidUser": {
+    "username": "",
+    "password": "",
+    "nickname": "",
+    "name": "",
+    "birthday": "",
+    "phone": {
+      "hp1": "",
+      "hp2": "",
+      "hp3": ""
+    },
+    "bank": "",
+    "bank_owner": ""
+  }
+}
