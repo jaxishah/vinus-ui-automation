@@ -30,55 +30,6 @@ test.describe('Registration Form Tests (Main Menu)', () => {
         }
     });
 
-    // //3️⃣ Test: Validation alerts on empty required fields
-    // test('Click Sign up now without filling required fields does not crash', async ({ page }) => {
-    //     const popup = await openRegistrationPopup(page);
-    //     const form = await getRegistrationForm(page, popup);
-
-    //     let alertAppeared = false;
-
-    //     // Listen for the next dialog and dismiss immediately
-    //     page.once('dialog', async (dialog) => {
-    //         alertAppeared = true;
-    //         await page.waitForTimeout(2000); // show alert for 2 seconds
-    //         await dialog.dismiss();
-    //     });
-
-    //     // Click the Sign Up button
-    //     await form.submitBtn.click({ force: true });
-
-    //     // Small delay to ensure dialog was triggered
-    //     await page.waitForTimeout(500);
-
-    //     // Confirm alert appeared
-    //     expect(alertAppeared).toBe(true);
-    // });
-
-    // test('Click Sign up now without filling required fields does not crash', async ({ page }) => {
-    //     const popup = await openRegistrationPopup(page);
-    //     const form = await getRegistrationForm(page, popup);
-
-    //     // Ensure button is visible before clicking
-    //     await form.submitBtn.waitFor({ state: 'visible', timeout: 5000 });
-
-    //     // Wait for dialog and click OK
-    //     const dialog = await page.waitForEvent('dialog', { timeout: 5000 }).catch(() => null);
-
-    //     // Click the button that triggers the alert
-    //     await form.submitBtn.click({ force: true });
-
-    //     if (dialog) {
-    //         console.log('Alert appeared:', dialog.message());
-    //         await page.waitForTimeout(5000); // wait 2 seconds before clicking OK
-    //         await dialog.accept(); // Click OK
-    //     } else {
-    //         console.warn('No alert appeared within timeout');
-    //     }
-
-    //     // Continue with rest of the test
-    //     console.log('Test continues after alert handling');
-    // });
-
     test('Click Sign up now without filling required fields does not crash', async ({ page }) => {
         const popup = await openRegistrationPopup(page);
         const form = await getRegistrationForm(page, popup);
@@ -111,56 +62,6 @@ test.describe('Registration Form Tests (Main Menu)', () => {
         console.log('Test continues after alert handling');
     });
 
-
-
-    // test('Show alert when clicking Send verification without entering phone number', async ({ page }) => {
-    //     // 1️⃣ Open the registration popup
-    //     const popup = await openRegistrationPopup(page);
-    //     const form = await getRegistrationForm(page, popup);
-
-    //     let alertAppeared = false;
-
-    //     page.once('dialog', async (dialog) => {
-    //         alertAppeared = true;
-    //         await page.waitForTimeout(2000); // show alert for 2 seconds
-    //         await dialog.dismiss();
-    //     });
-
-    //     // Click Send Verification button
-    //     await form.sendVerificationBtn.click({ force: true });
-
-    //     await page.waitForTimeout(500);
-
-    //     expect(alertAppeared).toBe(true);
-    // });
-
-
-
-    // test('Show alert when clicking Send verification without entering phone number', async ({ page }) => {
-    //     const popup = await openRegistrationPopup(page);
-    //     const form = await getRegistrationForm(page, popup);
-
-    //     // Ensure button is visible before clicking
-    //     await form.sendVerificationBtn.waitFor({ state: 'visible', timeout: 5000 });
-
-    //     // Wait for dialog and click OK
-    //     const dialog = await page.waitForEvent('dialog', { timeout: 5000 }).catch(() => null);
-
-    //     // Click the button that triggers the alert
-    //     await form.sendVerificationBtn.click({ force: true });
-
-    //     if (dialog) {
-    //         console.log('Alert appeared:', dialog.message());
-    //         await page.waitForTimeout(2000); 
-    //         await dialog.accept(); // Click OK
-    //     } else {
-    //         console.warn('No alert appeared within timeout');
-    //     }
-
-    //     // Continue with rest of the test
-    //     console.log('Test continues after alert handling');
-    // });
-    // working
 
     test('Click Sign up shows alert visibly', async ({ page }) => {
         const popup = await openRegistrationPopup(page);
