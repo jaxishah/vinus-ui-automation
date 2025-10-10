@@ -129,7 +129,7 @@ test.describe('Header Tests', () => {
 
     });
 
-    //TODO
+
     test('Verify dropdown menus appear on click and contain correct items', async ({ page }) => {
         await page.goto('/main/index');
         await page.waitForSelector('ul#gnb_mobile', { state: 'visible', timeout: 10000 });
@@ -142,6 +142,10 @@ test.describe('Header Tests', () => {
 
         for (const menu of dropdownMenus) {
             const menuLink = page.locator(`ul#gnb_mobile a.txt:has-text("${menu.name}")`);
+
+            await expect(menuLink, `Menu link "${menu.name}" should exist`).toHaveCount(1);
+
+            console.log(menuLink);
 
             if (await menuLink.count() > 0) {
                 console.log(`\nTesting: "${menu.name}"`);
@@ -174,6 +178,20 @@ test.describe('Header Tests', () => {
                             } else {
                                 console.log(`   ❌ "${subItem.name}" not found`);
                             }
+
+                            // 2️⃣ Assert visible text matches
+                            const itemText = (await subMenuItem.textContent())?.trim();
+                            await expect(itemText, `Submenu item text mismatch for "${subItem.name}"`).toBe(subItem.name);
+
+
+                            const href = await subMenuItem.getAttribute('href');
+
+                            // ✅ Check if the menu item exists
+                            await expect(subMenuItem, `Menu item "${subItem.name}" not found`).toHaveCount(1);
+
+                            // ✅ Check if the link (href) matches your MENU_CONFIG
+                            await expect(subMenuItem, `Incorrect link for "${subItem.name}"`).toHaveAttribute('href', subItem.link);
+
                         }
                     } else {
                         console.log(`❌ Dropdown exists but not visible`);
@@ -190,5 +208,110 @@ test.describe('Header Tests', () => {
 
         console.log('\nDropdown test completed');
     });
+
+
+    test('Verify dropdown menus after login appear on click and contain correct items', async ({ page }) => {
+        //await page.goto('/main/index');
+        await page.waitForSelector('ul#gnb_mobile', { state: 'visible', timeout: 10000 });
+
+        // Use afterLogin array directly
+        const dropdownMenus = MENU_CONFIG.afterLogin.filter(menu => menu.hasSubmenu && menu.submenu);
+
+        console.log(`Testing ${dropdownMenus.length} dropdown menus after login`);
+
+        const { username, password, loginBtn } = await getLoginFormFrom(page);
+
+        await username.fill(validUser.username);
+        await password.fill(validUser.password);
+
+        await loginBtn.click();
+        await page.waitForLoadState('networkidle');
+        await page.waitForTimeout(2000);
+
+        // Verify login successful
+        await expect(username).not.toBeVisible({ timeout: 5000 });
+
+
+        for (const menu of dropdownMenus) {
+            const menuLink = page.locator(`ul#gnb_mobile a.txt:has-text("${menu.name}")`);
+
+            await expect(menuLink, `Menu link "${menu.name}" should exist`).toHaveCount(1);
+
+            if (await menuLink.count() > 0) {
+                console.log(`\nTesting: "${menu.name}"`);
+
+                // Click menu to open dropdown
+                await menuLink.evaluate(el => el.click());
+                await page.waitForTimeout(1000);
+
+                const parentLi = menuLink.locator('xpath=..');
+                const subMenu = parentLi.locator('ul.depth2');
+
+                const subMenuExists = await subMenu.count() > 0;
+
+                if (subMenuExists) {
+                    const isVisible = await subMenu.isVisible();
+                    const displayStyle = await subMenu.evaluate(el => window.getComputedStyle(el).display).catch(() => 'error');
+
+                    console.log(`Dropdown visible: ${isVisible}, Display: ${displayStyle}`);
+
+                    if (isVisible || displayStyle !== 'none') {
+                        console.log(`✅ Dropdown appeared`);
+
+                        for (const subItem of menu.submenu!) {
+                            const subMenuItem = subMenu.locator('a').filter({ hasText: subItem.name }).first();
+
+                            if (await subMenuItem.count() > 0) {
+                                console.log(`   ✅ "${subItem.name}"`);
+                            } else {
+                                console.log(`   ❌ "${subItem.name}" not found`);
+                            }
+
+                            const itemText = (await subMenuItem.textContent())?.trim();
+                            await expect(itemText, `Submenu item text mismatch for "${subItem.name}"`).toBe(subItem.name);
+
+                            // Check if the link matches MENU_CONFIG
+                            await expect(subMenuItem, `Incorrect link for "${subItem.name}"`).toHaveAttribute('href', subItem.link);
+                        }
+                    } else {
+                        console.log(`❌ Dropdown exists but not visible`);
+                    }
+                } else {
+                    console.log(`ℹ️  No dropdown menu found for "${menu.name}"`);
+                }
+
+                // Close dropdown
+                await page.mouse.click(10, 10);
+                await page.waitForTimeout(500);
+            }
+        }
+
+        console.log('\nDropdown test after login completed');
+    });
+
+    //TODO
+    // test('Verify mobile main menu navigation before login', async ({ page }) => {
+
+    //     // Wait for mobile menu
+    //     await page.waitForSelector('ul#gnb_mobile', { state: 'visible', timeout: 10000 });
+
+    //     for (const menu of MENU_CONFIG.beforeLogin) {
+    //         const menuLocator = page.locator(`ul#gnb_mobile a.txt:has-text("${menu.name}")`);
+
+    //         // ✅ Step 1: Menu should exist
+    //         await expect(menuLocator, `Menu "${menu.name}" should exist`).toHaveCount(1);
+
+    //         // ✅ Step 2: Clicking should open login popup (since user is not logged in)
+    //         await menuLocator.click({ force: true });
+    //         const popup = page.locator('.login_popup, #login-form');
+
+    //         // wait for display animation (if any)
+    //         await expect(popup, `Login popup should appear for "${menu.name}"`).toBeVisible({ timeout: 10000 });
+
+    //         // Close popup before next iteration
+    //         await page.keyboard.press('Escape');
+    //         await page.waitForTimeout(500);
+    //     }
+    // });
 
 });

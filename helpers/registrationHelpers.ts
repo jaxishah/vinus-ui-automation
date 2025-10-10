@@ -39,7 +39,7 @@ export async function openRegistrationPopup(page: Page): Promise<Locator> {
 
     // Wait for registration popup
     const registrationPopup = page.locator('form[id*="join"]:visible, form[id^="regist-form"]:visible').first();
-    await registrationPopup.waitFor({ state: 'visible', timeout: 60000 });
+    await registrationPopup.waitFor({ state: 'visible', timeout: 10000 });
 
     return registrationPopup;
 }
